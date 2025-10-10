@@ -33,8 +33,6 @@ public class VeiculoController {
                 .orElse(null);
     }
 
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Veiculo inserir(@RequestBody Veiculo veiculo){
@@ -57,6 +55,7 @@ public class VeiculoController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         for(int i = 0; i< lista.size();i++){
             if(lista.get(i)

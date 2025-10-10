@@ -1,4 +1,4 @@
-package org.serratec.aula2.domain;
+package org.serratec.aula3.Entity;
 
 import jakarta.persistence.*;
 
@@ -51,12 +51,5 @@ public class Aluno {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
