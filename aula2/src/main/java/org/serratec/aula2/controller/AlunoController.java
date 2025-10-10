@@ -4,6 +4,8 @@ package org.serratec.aula2.controller;
 import org.serratec.aula2.domain.Aluno;
 import org.serratec.aula2.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,13 @@ public class AlunoController {
         }
         return ResponseEntity.notFound().build();
     }
+    //BUSCAR PELO NOME
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Aluno>> buscarPorNome(@RequestParam String nome) {
+        List<Aluno> alunos = alunoRepository.buscarPorNome(nome);
+        return ResponseEntity.ok(alunos);
+    }
+
     //INSERIR
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
