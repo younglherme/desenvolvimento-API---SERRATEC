@@ -1,6 +1,9 @@
 package org.serratec.aula2.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="aluno")
@@ -10,12 +13,17 @@ public class Aluno {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message ="Matricula é Obrigatório!")
     @Column(name = "matricula", nullable = false, unique = true)
     private Long matricula;
 
+    @NotBlank(message = "Nome é Obrigatório!")
+    @Size(max = 50)
     @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
+    @NotBlank(message = "Telefone é Obrigatório!")
+    @Size(max = 15)
     @Column(name = "telefone", nullable = false)
     private String telefone;
 

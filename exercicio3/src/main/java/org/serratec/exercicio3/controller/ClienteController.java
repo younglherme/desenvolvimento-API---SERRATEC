@@ -1,5 +1,6 @@
 package org.serratec.exercicio3.controller;
 
+import jakarta.validation.Valid;
 import org.serratec.exercicio3.domain.Cliente;
 import org.serratec.exercicio3.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,12 @@ public class ClienteController {
     //INSERIR
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente inserir(@RequestBody Cliente cliente){
+    public Cliente inserir(@Valid @RequestBody Cliente cliente){
         return clienteRepository.save(cliente);
     }
     //ATUALIZAR
     @PutMapping("/{id_cliente}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long id_cliente, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> atualizar(@Valid  @PathVariable Long id_cliente, @RequestBody Cliente cliente) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(id_cliente);
         if(!clienteOptional.isPresent()){
             return ResponseEntity.notFound().build();

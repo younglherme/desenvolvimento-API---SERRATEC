@@ -1,6 +1,7 @@
 package org.serratec.aula2.controller;
 
 
+import jakarta.validation.Valid;
 import org.serratec.aula2.domain.Aluno;
 import org.serratec.aula2.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,12 @@ public class AlunoController {
     //INSERIR
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Aluno inserir(@RequestBody Aluno aluno){
+    public Aluno inserir(@Valid @RequestBody Aluno aluno){
         return alunoRepository.save(aluno);
     }
     //ATUALIZAR
     @PutMapping("/{id}")
-    public ResponseEntity<Aluno> atualizar(@PathVariable Long id, @RequestBody Aluno aluno) {
+    public ResponseEntity<Aluno> atualizar(@Valid @PathVariable Long id, @RequestBody Aluno aluno) {
         Optional<Aluno> alunoOptional = alunoRepository.findById(id);
         if(!alunoOptional.isPresent()){
             return ResponseEntity.notFound().build();
