@@ -16,23 +16,5 @@ import java.util.List;
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatusCode status,
-            WebRequest request) {
 
-        List<String> erros = new ArrayList<>();
-        for(FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            erros.add(fieldError.getField() + ": " + fieldError.getDefaultMessage());
-        }
-
-        ErroResposta erroResposta = new ErroResposta(status.value(),
-                "Existe campos Inválidos , confira o preenchimento!", LocalDateTime.now(), erros);
-
-
-
-        return this.handleExceptionInternal(ex, erroResposta, headers, status, request);
-    }
 }
