@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -12,6 +13,7 @@ public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
     @NotBlank(message ="Nome é Obrigatório!")
@@ -19,15 +21,16 @@ public class Funcionario {
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
+    @NotBlank(message ="CPF é Obrigatório!")
     @CPF(message ="CPF inválido!")
     @Size(max = 11)
-    @Column(name = "cpf", nullable = false, length = 1, unique = true)
+    @Column(name = "cpf", nullable = false, length = 11, unique = true)
     private String cpf;
 
     @NotNull(message = "Salário é obrigatório")
     @Positive(message = "Salário deve ser positivo")
-    @Column(name = "salario", length = 60)
-    private Double salario;
+    @Column(name = "salario",nullable =false, length = 60)
+    private BigDecimal salario;
 
     @PastOrPresent
     @Column(name = "data_Admissao", nullable = false)
@@ -35,7 +38,11 @@ public class Funcionario {
 
     public Funcionario() {}
 
-    public Funcionario(Long id, String nome, String cpf, Double salario, LocalDate dataAdmissao) {
+    public Funcionario(Long id,
+                       String nome,
+                       String cpf,
+                       BigDecimal salario,
+                       LocalDate dataAdmissao) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -67,11 +74,11 @@ public class Funcionario {
         this.cpf = cpf;
     }
 
-    public Double getSalario() {
+    public BigDecimal getSalario() {
         return salario;
     }
 
-    public void setSalario(Double salario) {
+    public void setSalario(BigDecimal salario) {
         this.salario = salario;
     }
 
