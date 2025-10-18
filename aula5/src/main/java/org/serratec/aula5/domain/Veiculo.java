@@ -1,9 +1,13 @@
 package org.serratec.aula5.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 @Table(name="veiculo")
@@ -29,7 +33,16 @@ public class Veiculo {
     private String modelo;
 
     @Embedded
+    @Valid
     private Caracteristicas caracteristicas;
+
+    @JsonManagedReference
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="id_proprietario")
+    private Proprietario proprietario;
+
+    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
+    private List<Manutencao> manutencao;
 
     public Veiculo() {}
 
@@ -78,5 +91,13 @@ public class Veiculo {
 
     public void setCaracteristicas(Caracteristicas caracteristicas) {
         this.caracteristicas = caracteristicas;
+    }
+
+    public Proprietario getProprietario() {
+        return proprietario;
+    }
+
+    public void setProprietario(Proprietario proprietario) {
+        this.proprietario = proprietario;
     }
 }

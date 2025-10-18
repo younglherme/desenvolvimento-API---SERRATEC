@@ -1,5 +1,6 @@
 package org.serratec.aula5.domain;
 
+
 import jakarta.persistence.*;
 
 @Entity

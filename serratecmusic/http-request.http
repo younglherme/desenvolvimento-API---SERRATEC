@@ -1,0 +1,16 @@
+###
+POST http://localhost:8080/artistas
+Content-Type: application/json
+
+{
+  "nome": "Travis Scott",
+  "nacionalidade": "E.U.A",
+  "musicas": [
+    {
+      "titulo": "Sicko Mode",
+      "genero": "TRAP",
+      "minutos": 2018
+    }
+      ]
+}
+

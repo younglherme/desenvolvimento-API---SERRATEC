@@ -1,7 +1,12 @@
 package org.serratec.aula5.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.serratec.aula5.domain.Proprietario;
 import org.serratec.aula5.domain.Veiculo;
+import org.serratec.aula5.repository.ProprietarioRepository;
 import org.serratec.aula5.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,49 +17,66 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/veiculo")
+@RequestMapping("/veiculos")
 public class VeiculoController {
 
     @Autowired
     private VeiculoRepository veiculoRepository;
 
-    //Buscar
+    @Autowired
+    private ProprietarioRepository proprietarioRepository;
+
     @GetMapping
-    public List<Veiculo> findAll() {
-        return veiculoRepository.findAll();
+    public ResponseEntity<List<Veiculo>> listar() {
+        return ResponseEntity.ok(veiculoRepository.findAll());
     }
-    @GetMapping("{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Veiculo> buscar(@PathVariable Long id){
+
+    @Operation(summary = "Listar veículo por ID", description = "Retorna um veículo específico com base no ID fornecido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Veículo encontrado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Veículo não encontrado para o ID fornecido."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor.")})
+    @GetMapping("/{id}")
+    public ResponseEntity<Veiculo> buscarPorId(@PathVariable Long id) {
         Optional<Veiculo> veiculo = veiculoRepository.findById(id);
-        if(veiculo.isPresent()){
+
+        if (veiculo.isPresent()) {
             return ResponseEntity.ok(veiculo.get());
         }
+
         return ResponseEntity.notFound().build();
     }
-    //INSERIR
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Veiculo save(@Valid @RequestBody Veiculo veiculo){
+    public Veiculo criar(@Valid @RequestBody Veiculo veiculo) {
+
+        Proprietario proprietario = proprietarioRepository.findById(veiculo.getProprietario().getId())
+                .orElseThrow(() -> new RuntimeException("Proprietário não encontrado com o ID: " + veiculo.getProprietario().getId()));
+
+        veiculo.setProprietario(proprietario);
         return veiculoRepository.save(veiculo);
     }
-    //ATUALIZAR
+
     @PutMapping("/{id}")
-    public ResponseEntity<Veiculo> atualizar (@Valid @PathVariable Long id, @RequestBody Veiculo veiculo){
-        Optional<Veiculo> veiculoAtualizado = veiculoRepository.findById(id);
-        if(!veiculoAtualizado.isPresent()){
+    public ResponseEntity<Veiculo> atualizar(@PathVariable Long id, @Valid @RequestBody Veiculo veiculo) {
+        if (!veiculoRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
         veiculo.setId(id);
         veiculo = veiculoRepository.save(veiculo);
+
         return ResponseEntity.ok(veiculo);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Veiculo> deletar (@PathVariable Long id){
-        if(!veiculoRepository.existsById(id)){
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        if (!veiculoRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
         veiculoRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
